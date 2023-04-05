@@ -33,8 +33,7 @@ Images can be in `.fits` format or in generic image format, such as `.bmp`
 Output the raw grayscale image with origin at bottom(the first row) left corner point.
 
 ```python
->>> rawimage = image.rawimage
->>> print(image.raw_image,image.res) # image resolution
+>>> print(image.image_raw,image.res) # image resolution
 ```
 
 Show raw image
