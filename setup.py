@@ -1,7 +1,7 @@
 from setuptools import setup,find_packages 
 
 setup(
-    name='sourceextractor',
+    name='starextractor',
     version='0.1.0',
     description='A package to extract stars from an astronomical image',
     author='Chunxiao Li',
