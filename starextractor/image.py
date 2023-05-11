@@ -10,14 +10,14 @@ def read_image(imagefile):
     Read an astronomical image captured by cameras in fits format or in generic image format.
 
     Usage:
-    >>> imagefile = 'obs/fits/img_00000.fits' # imagefile = 'obs/bmp/img_00000.bmp'
-    >>> image_raw = read_image(imagefile)
+        >>> imagefile = 'obs/fits/img_00000.fits' # imagefile = 'obs/bmp/img_00000.bmp'
+        >>> image_raw = read_image(imagefile)
 
     Inputs:
-    imagefile -> [str] image filename
+        imagefile -> [str] image filename
 
     Outputs:
-    image_raw -> [2d array of float] raw grayscale image with origin at bottom left corner point
+        image_raw -> [2d array of float] raw grayscale image with origin at bottom left corner point
     """
     if imagefile.split('.')[1] in ['fits','fit']: # Load an astronomical image in format of fits
         unit_list = fits.open(imagefile)
@@ -31,29 +31,27 @@ def read_image(imagefile):
     return image_raw
     
 
-def centroid(image_raw,max_control_points=50,fwhm=12,mask=False):
+def source_extract(image_raw,max_control_points=60,fwhm=12,mask=False):
     """
     Search for star spots in an image, extracting their centroids and doing photometry.
 
     Usage: 
-    >>> imagefile = 'obs/fits/img_00000.fits' # imagefile = 'obs/bmp/img_00000.bmp'
-    >>> image_raw = read_image(imagefile)
-    >>> xy_centroids,offset,image,bkg_rms,mask_rectangle = centroid(image_raw)
+        >>> imagefile = 'obs/fits/img_00000.fits' # imagefile = 'obs/bmp/img_00000.bmp'
+        >>> image_raw = read_image(imagefile)
+        >>> xy_centroids,offset,image,bkg_rms,mask_rectangle = source_extract(image_raw)
     
     Inputs:
-    image_raw -> [2d array of float] raw grayscale image with origin at bottom left corner point
-
-    Parameters:    
-    max_control_points -> [int,optional,default=50] Maximum number of centroids to extract
-    fwhm -> [float,optional,default=15] Full-width half-maximum (FWHM) of the Gaussian kernel in units of pixels used in DAOStarFinder
-    mask -> [bool,optional,default=False] A True value indicates the edge area of an image is masked. Masked pixels are ignored when searching for stars.
+        image_raw -> [2d array of float] raw grayscale image with origin at bottom left corner point  
+        max_control_points -> [int,optional,default=50] Maximum number of sources to extract
+        fwhm -> [float,optional,default=15] Full-width half-maximum (FWHM) of the Gaussian kernel in units of pixels used in DAOStarFinder
+        mask -> [bool,optional,default=False] A True value indicates the edge area of an image is masked. Masked pixels are ignored when searching for stars.
 
     Outputs:
-    xy_centroids -> [2d array of float] Cartesian pixel coordinates of the star centroids
-    offset -> [array of float] Cartesian coordinates of the center of the image
-    image -> [2d array of float] signal, i.e. subtracting the background gray value from the raw grayscale image
-    bkg_rms -> [2d array of float] background noise
-    mask_rectangle -> [None or tuple] If None, then no mask rectangle is generated; Else, a rectangle defined by the bottom left corner point, width and height is generated
+        xy_centroids -> [2d array of float] Cartesian pixel coordinates of the centroids of star spots
+        offset -> [array of float] Cartesian coordinates of the center of the image
+        image -> [2d array of float] signal, i.e. subtracting the background gray value from the raw grayscale image
+        bkg_rms -> [2d array of float] background noise
+        mask_rectangle -> [None or tuple] If None, then no mask rectangle is generated; Else, a rectangle defined by the bottom left corner point, width and height is generated
     """
 
     # Calculate the offset of the image center from the origin
@@ -80,7 +78,7 @@ def centroid(image_raw,max_control_points=50,fwhm=12,mask=False):
         mask_region = None
         mask_rectangle = None
             
-    # Search for star spots and extract their centroids
+    # Extract star spots and estimate their centroids
     daofind = DAOStarFinder(fwhm=fwhm,threshold=5*bkg_sigma,brightest=max_control_points) 
     star_spots = daofind(image,mask=mask_region)  
     xy_centroids = np.transpose((star_spots['xcentroid'], star_spots['ycentroid']))

@@ -5,13 +5,13 @@
 This package is an archive of scientific routines for data processing related to the source extraction from an astronomical image.
 Currently, operations on source extraction include:
 
-1. Read an astronomical image captured by cameras in fits format or in generic image format;
-2. Search for stars, extract their centroids and do photometry using `photutils`;
-3. Show raw image with star marked;
+1. Read an astronomical image in `.fits` format or in generic image format, such as `.bmp`;
+2. Extract the centroid coordinates of the star spots and do photometry using `photutils`;
+3. Show raw image with star spots marked;
 
 ## How to Install
 
-On Linux, macOS and Windows architectures, the binary wheels can be installed using pip by executing one of the following commands:
+On Linux, macOS and Windows architectures, the binary wheels can be installed using `pip` by executing one of the following commands:
 
 ```
 pip install starextractor
@@ -22,7 +22,7 @@ pip install starextractor --upgrade # to upgrade a pre-existing installation
 
 ### Read an astronomical image
 
-Images can be in `.fits` format or in generic image format, such as `.bmp`
+Images can be in `.fits` format or in generic image format, such as `.bmp`.
 
 ```python
 >>> from starextractor import AstroImage
@@ -30,13 +30,13 @@ Images can be in `.fits` format or in generic image format, such as `.bmp`
 >>> image = AstroImage.read_image(imagefile)
 ```
 
-Output the raw grayscale image with origin at bottom(the first row) left corner point.
+Print the raw grayscale image with the origin at the center of the bottom(the first row of array) left pixel.
 
 ```python
->>> print(image.image_raw,image.res) # image resolution
+>>> print(image.image_raw,image.res) # original grayscale image and its resolution
 ```
 
-Show raw image
+### Show the raw image
 
 ```python
 >>> image.show_image()
@@ -47,20 +47,20 @@ Show raw image
   <img src="readme_figs/image_raw.png" width="500" />
 </p>
 
-#### Search for stars, extract their centroids and do photometry
+### Extract the centroid coordinates of the star spots and do photometry
 
-Estimate the centroids coordinates, brightness(sum of grayvalue within an aperture),  and SNR of star spots.
+Estimate the centroids coordinates, brightness(sum of gray value within an aperture),  and SNR of star spots.
 
 ```python
->>> centroids = image.find_centroid(fwhm=12,max_control_points=50,mask=True)
->>> print(centroids.xy,centroids.brightness,centroids.snr)
+>>> sources = image.find_source(fwhm=12,max_control_points=50,mask=True)
+>>> print(sources.xy,sources.brightness,sources.snr)
 ```
 
-Show raw image
+### Show the raw image
 
 ```python
->>> centroids.show_image()
->>> #centroids.show_image('figs/centroids.png') # save image to a file
+>>> sources.show_image()
+>>> #sources.show_image('figs/sources.png') # save image to a file
 ```
 
 <p align="middle">
@@ -68,6 +68,10 @@ Show raw image
 </p>
 
 ## Change log
+
+- **0.1.2 — May 11,  2023**
+  
+  - The class `Centriod` is *deprecated*, and the class `Source` is used instead
 
 - **0.1.0 — Apr 5,  2023**
   

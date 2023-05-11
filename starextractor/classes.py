@@ -1,6 +1,6 @@
 from photutils.aperture import CircularAperture,aperture_photometry
 
-from .image import read_image,centroid
+from .image import read_image,source_extract
 from .plot import show_image
 
 class AstroImage(object):
@@ -42,7 +42,7 @@ class AstroImage(object):
 
         return AstroImage(info)  
 
-    def find_centroid(self,max_control_points=50,fwhm=12,mask=False):
+    def find_source(self,max_control_points=60,fwhm=12,mask=False):
         """
         Search for star spots in an image, extracting their centroids and doing photometry.
 
@@ -50,16 +50,16 @@ class AstroImage(object):
         >>> from sourceextractor import AstroImage
         >>> imagefile = 'obs/fits/img_00000.fits' # imagefile = 'obs/bmp/img_00000.bmp'
         >>> image = AstroImage.read_image(imagefile)
-        >>> centroids = image.find_centroid(imagefile,mask=True)
+        >>> sources = image.find_source(imagefile,mask=True)
 
         Parameters:    
-        max_control_points -> [int,optional,default=50] Maximum number of centroids to extract
+        max_control_points -> [int,optional,default=50] Maximum number of sources to extract
         fwhm -> [float,optional,default=15] Priori Full-width half-maximum (FWHM) of the Gaussian kernel in units of pixels used in DAOStarFinder
         mask -> [bool,optional,default=False] A True value indicates the edge area of an image is masked. Masked pixels are ignored when searching for stars.
         Outputs:
-        centroids -> instance of class Centroid with its attributes as follows:
-            xy_centroids -> [2d array of float] Cartesian pixel coordinates of the star centroids
-            _offset -> [array of float] Cartesian coordinates of the center of the image
+        sources -> Instance of class Source with its attributes as follows:
+            xy_centroids -> [2d array of float] Pixel coordinates of the star centroids
+            _offset -> [array of float] Pixel coordinates of the center of the image
             _image_raw -> [2d array of float] raw grayscale image
             _image -> [2d array of float] signal, i.e. subtracting the background gray value from the raw grayscale image
             _apertures -> A circular aperture defined in pixel coordinates.
@@ -68,8 +68,8 @@ class AstroImage(object):
             mask_rectangle -> [None or tuple] If None, then no mask rectangle is generated; Else, a rectangle defined by the bottom left corner point, width and height is generated
         """
         image_raw = self.image_raw
-        # Search for star spots in an image and extract their centroids
-        xy_centroids,_offset,_image,_bkg_rms,_mask_rectangle = centroid(image_raw,max_control_points,fwhm,mask)
+        # Search for star spots in an image and extract them
+        xy_centroids,_offset,_image,_bkg_rms,_mask_rectangle = source_extract(image_raw,max_control_points,fwhm,mask)
 
         # Do photometry
         _apertures = CircularAperture(xy_centroids, r=fwhm)
@@ -84,7 +84,7 @@ class AstroImage(object):
         dict_keys = 'xy','_offset','image_raw','_image','_apertures','brightness','snr','_mask_rectangle'
         info = dict(zip(dict_keys, dict_values))
 
-        return Centroid(info)      
+        return Source(info)      
 
     def show_image(self,fig_out=None):
         """
@@ -100,9 +100,9 @@ class AstroImage(object):
             plot_kwargs = {'figname':fig_out}
             show_image(self.image_raw,origin='lower',**plot_kwargs)         
 
-class Centroid(object):
+class Source(object):
     """
-    Class Centroids
+    Class Source
     """
     
     def __init__(self,info):  
@@ -114,15 +114,14 @@ class Centroid(object):
 
     def __repr__(self):
     
-        return 'instance of class Centroid'
+        return 'Instance of class Source'
 
     def show_image(self,fig_out=None):
         """
-        Show raw image with star spots marked
+        Show raw image with stars marked
 
-        Parameters:
-        fig_out -> [str,optional,default=None] In not None, save the image to a file defined by fig_out
-
+        Inputs:
+            fig_out -> [str,optional,default=None] In not None, save the image to a file defined by fig_out
         """
         if fig_out is None:
             plot_kwargs = {'mark':(self._apertures,'blue')}
