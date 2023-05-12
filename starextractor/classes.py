@@ -2,6 +2,7 @@ from photutils.aperture import CircularAperture,aperture_photometry
 
 from .image import read_image,source_extract
 from .plot import show_image
+from .invariantfeatures import _generate_invariants
 
 class AstroImage(object):
     """
@@ -59,7 +60,7 @@ class AstroImage(object):
         Outputs:
         sources -> Instance of class Source with its attributes as follows:
             xy_centroids -> [2d array of float] Pixel coordinates of the star centroids
-            _offset -> [array of float] Pixel coordinates of the center of the image
+            offset -> [array of float] Pixel coordinates of the center of the image
             _image_raw -> [2d array of float] raw grayscale image
             _image -> [2d array of float] signal, i.e. subtracting the background gray value from the raw grayscale image
             _apertures -> A circular aperture defined in pixel coordinates.
@@ -69,7 +70,8 @@ class AstroImage(object):
         """
         image_raw = self.image_raw
         # Search for star spots in an image and extract them
-        xy_centroids,_offset,_image,_bkg_rms,_mask_rectangle = source_extract(image_raw,max_control_points,fwhm,mask)
+        xy_centroids,offset,_image,_bkg_rms,_mask_rectangle = source_extract(image_raw,max_control_points,fwhm,mask)
+        xy = xy_centroids - offset # move the origin to the center of image from the center of the bottom left pixel.
 
         # Do photometry
         _apertures = CircularAperture(xy_centroids, r=fwhm)
@@ -80,13 +82,13 @@ class AstroImage(object):
         noise = noise_table['aperture_sum'].value
         snr = brightness/noise # Signal Noise Ratio
 
-        dict_values = xy_centroids,_offset,image_raw,_image,_apertures,brightness,snr,_mask_rectangle
-        dict_keys = 'xy','_offset','image_raw','_image','_apertures','brightness','snr','_mask_rectangle'
+        dict_values = xy,offset,image_raw,_image,_apertures,brightness,snr,_mask_rectangle
+        dict_keys = 'xy','offset','image_raw','_image','_apertures','brightness','snr','_mask_rectangle'
         info = dict(zip(dict_keys, dict_values))
 
         return Source(info)      
 
-    def show_image(self,fig_out=None):
+    def show(self,fig_out=None):
         """
         Show raw image
 
@@ -116,7 +118,7 @@ class Source(object):
     
         return 'Instance of class Source'
 
-    def show_image(self,fig_out=None):
+    def show(self,fig_out=None):
         """
         Show raw image with stars marked
 
@@ -127,6 +129,19 @@ class Source(object):
             plot_kwargs = {'mark':(self._apertures,'blue')}
         else:
             plot_kwargs = {'mark':(self._apertures,'blue'),'figname':fig_out}
-        show_image(self.image_raw,origin='lower',mask_rectangle=self._mask_rectangle,**plot_kwargs)      
+        show_image(self.image_raw,origin='lower',mask_rectangle=self._mask_rectangle,**plot_kwargs)     
+
+    def invariantfeatures(self):
+        """
+        Calculate the unique invariants (L2/L1,L1/L0), where L2 >= L1 >= L0 are the three sides of the triangle composed of centroids.
+        At the same time, record an array of the indices of centroids that correspond to each invariant.
+        """
+        inv_uniq, triang_vrtx_uniq = _generate_invariants(self.xy)
+
+        info = self.info.copy()
+        info.update({'invariants':inv_uniq,'asterisms':triang_vrtx_uniq})
+
+        return Source(info)
+
  
         

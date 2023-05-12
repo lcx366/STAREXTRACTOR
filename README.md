@@ -39,8 +39,8 @@ Print the raw grayscale image with the origin at the center of the bottom(the fi
 ### Show the raw image
 
 ```python
->>> image.show_image()
->>> #image.show_image('figs/raw_image.png') # save image to a file
+>>> image.show()
+>>> #image.show('figs/raw_image.png') # save image to a file
 ```
 
 <p align="middle">
@@ -52,15 +52,22 @@ Print the raw grayscale image with the origin at the center of the bottom(the fi
 Estimate the centroids coordinates, brightness(sum of gray value within an aperture),  and SNR of star spots.
 
 ```python
->>> sources = image.find_source(fwhm=12,max_control_points=50,mask=True)
->>> print(sources.xy,sources.brightness,sources.snr)
+>>> sources = image.find_source(fwhm=12,mask=True)
+>>> print(sources.xy,sources.brightness,sources.snr,sources.offset)
 ```
 
-### Show the raw image
+### Calculate the triangle invariants and the asterism indices of the star spots.
 
 ```python
->>> sources.show_image()
->>> #sources.show_image('figs/sources.png') # save image to a file
+>>> sources = sources.invariantfeatures()
+>>> print(sources.invariants,sources.asterisms)
+```
+
+### Show the extracted sources in image
+
+```python
+>>> sources.show()
+>>> #sources.show('figs/sources.png') # save image to a file
 ```
 
 <p align="middle">
@@ -69,9 +76,10 @@ Estimate the centroids coordinates, brightness(sum of gray value within an apert
 
 ## Change log
 
-- **0.1.2 — May 11,  2023**
+- **0.1.3 — May 12,  2023**
   
   - The class `Centriod` is *deprecated*, and the class `Source` is used instead
+  - Add method `.invariantfeatures()` to class `Source`, which calculates the triangle invariants and the asterism indices of the star spots
 
 - **0.1.0 — Apr 5,  2023**
   
@@ -81,3 +89,4 @@ Estimate the centroids coordinates, brightness(sum of gray value within an apert
 
 - [photutils](https://photutils.readthedocs.io/en/stable/index.html)
 - [Photometry Methods](http://srmastro.uvacreate.virginia.edu/astr313/lectures/photometry/photometry_methods.html)
+- [Astroalign]([Astroalign documentation &mdash; astroalign 2.4.2 documentation](https://astroalign.quatrope.org/en/latest/))
