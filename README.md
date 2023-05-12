@@ -89,4 +89,4 @@ Estimate the centroids coordinates, brightness(sum of gray value within an apert
 
 - [photutils](https://photutils.readthedocs.io/en/stable/index.html)
 - [Photometry Methods](http://srmastro.uvacreate.virginia.edu/astr313/lectures/photometry/photometry_methods.html)
-- [Astroalign]([Astroalign documentation &mdash; astroalign 2.4.2 documentation](https://astroalign.quatrope.org/en/latest/))
+- [Astroalign](https://astroalign.quatrope.org/en/latest/)
