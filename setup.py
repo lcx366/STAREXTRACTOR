@@ -27,6 +27,8 @@ setup(
     install_requires=[
         'photutils',
         'astropy>=4.3.1',
-        'pillow'
+        'pillow',
+        'scipy'
+        ''
         ],
 )
