@@ -140,7 +140,7 @@ class Source(object):
         """
         inv_uniq, triang_vrtx_uniq = _generate_invariants(self.xy)
         inv_uniq_tree = KDTree(inv_uniq)
-        self.info.update({'invariants':inv_uniq,'asterisms':triang_vrtx_uniq,'invariants_2dtree':inv_uniq_tree})
+        self.info.update({'invariants':inv_uniq,'asterisms':triang_vrtx_uniq,'kdtree':inv_uniq_tree})
         self.invariants,self.asterisms,self.kdtree = inv_uniq,triang_vrtx_uniq,inv_uniq_tree
         return self
 
