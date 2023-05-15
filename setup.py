@@ -2,7 +2,7 @@ from setuptools import setup,find_packages
 
 setup(
     name='starextractor',
-    version='0.1.3',
+    version='0.1.4',
     description='A package to extract stars from an astronomical image',
     author='Chunxiao Li',
     author_email='lcx366@126.com',

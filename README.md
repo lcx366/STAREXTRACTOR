@@ -56,11 +56,11 @@ Estimate the centroids coordinates, brightness(sum of gray value within an apert
 >>> print(sources.xy,sources.brightness,sources.snr,sources.offset)
 ```
 
-### Calculate the triangle invariants and the asterism indices of the star spots.
+### Calculate the triangle invariants and construct a 2D Tree; and record the asterism indices for each triangle.
 
 ```python
->>> sources = sources.invariantfeatures()
->>> print(sources.invariants,sources.asterisms)
+>>> sources.invariantfeatures()
+>>> print(sources.invariants,sources.asterisms,sources.kdtree)
 ```
 
 ### Show the extracted sources in image
@@ -76,10 +76,10 @@ Estimate the centroids coordinates, brightness(sum of gray value within an apert
 
 ## Change log
 
-- **0.1.3 — May 12,  2023**
+- **0.1.4 — May 14,  2023**
   
   - The class `Centriod` is *deprecated*, and the class `Source` is used instead
-  - Add method `.invariantfeatures()` to class `Source`, which calculates the triangle invariants and the asterism indices of the star spots
+  - Add method `.invariantfeatures()` to class `Source`, which calculates the triangle invariants and construct a 2D Tree; and record the asterism indices for each triangle.
 
 - **0.1.0 — Apr 5,  2023**
   

@@ -1,4 +1,5 @@
 from photutils.aperture import CircularAperture,aperture_photometry
+from scipy.spatial import KDTree
 
 from .image import read_image,source_extract
 from .plot import show_image
@@ -133,15 +134,15 @@ class Source(object):
 
     def invariantfeatures(self):
         """
-        Calculate the unique invariants (L2/L1,L1/L0), where L2 >= L1 >= L0 are the three sides of the triangle composed of centroids.
-        At the same time, record an array of the indices of centroids that correspond to each invariant.
+        1. Calculate the unique invariants (L2/L1,L1/L0), where L2 >= L1 >= L0 are the three sides of the triangle composed of centroids.
+        2. Construct the 2D Tree from the the unique invariants.
+        3. Record an array of the indices of centroids that correspond to each invariant.
         """
         inv_uniq, triang_vrtx_uniq = _generate_invariants(self.xy)
-
-        info = self.info.copy()
-        info.update({'invariants':inv_uniq,'asterisms':triang_vrtx_uniq})
-
-        return Source(info)
+        inv_uniq_tree = KDTree(inv_uniq)
+        self.info.update({'invariants':inv_uniq,'asterisms':triang_vrtx_uniq,'invariants_2dtree':inv_uniq_tree})
+        self.invariants,self.asterisms,self.kdtree = inv_uniq,triang_vrtx_uniq,inv_uniq_tree
+        return self
 
  
         
