@@ -76,10 +76,10 @@ Estimate the centroids coordinates, brightness(sum of gray value within an apert
 
 ## Change log
 
-- **0.1.4 — May 14,  2023**
+- **0.1.5 — May 14,  2023**
   
   - The class `Centriod` is *deprecated*, and the class `Source` is used instead
-  - Add method `.invariantfeatures()` to class `Source`, which calculates the triangle invariants and construct a 2D Tree; and record the asterism indices for each triangle.
+  - Add method `.invariantfeatures()` to class `Source`, which calculates the triangle invariants and constructs a 2D Tree; and records the asterism indices for each triangle.
 
 - **0.1.0 — Apr 5,  2023**
   
