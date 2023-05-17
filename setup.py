@@ -29,6 +29,6 @@ setup(
         'astropy>=4.3.1',
         'pillow',
         'scipy'
-        ''
+        'matplotlib'
         ],
 )
