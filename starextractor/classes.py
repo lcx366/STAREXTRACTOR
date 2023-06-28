@@ -139,6 +139,8 @@ class Source(object):
         3. Record an array of the indices of centroids that correspond to each invariant.
         """
         inv_uniq, triang_vrtx_uniq = _generate_invariants(self.xy)
+        if not inv_uniq:
+            raise Exception('At least three sources are required to form an invariant triangle.')
         inv_uniq_tree = KDTree(inv_uniq)
         self.info.update({'invariants':inv_uniq,'asterisms':triang_vrtx_uniq,'kdtree':inv_uniq_tree})
         self.invariants,self.asterisms,self.kdtree = inv_uniq,triang_vrtx_uniq,inv_uniq_tree
