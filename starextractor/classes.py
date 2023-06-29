@@ -21,24 +21,32 @@ class AstroImage(object):
     
         return 'instance of class AstroImage'
 
-    def read_image(imagefile):
+    def read_image(image_in):
         """
-        Read an astronomical image captured by cameras in fits format or in generic image format.
+        Read an astronomical image captured by cameras. 
+        Currently, supported image formats include .fits, generic image format(such as .bmp), .npy, or numpy array.
 
         Usage:
-        >>> from sourceextractor import AstroImage
-        >>> imagefile = 'obs/fits/img_00000.fits' # imagefile = 'obs/bmp/img_00000.bmp'
-        >>> image = AstroImage.read_image(imagefile)
+            >>> from sourceextractor import AstroImage
+            >>> imagefile = 'obs/fits/img_00000.fits'
+            >>> # imagefile = 'obs/bmp/img_00000.bmp'
+            >>> # imagefile = 'obs/npy/img_00000.npy'
+            >>> image = AstroImage.read_image(imagefile)
+            >>> image = AstroImage.read_image(image_array)
 
         Inputs:
-        imagefile -> [str] image filename
+            image_in -> [str or numpy array] image file or numpy array
 
         Outputs:
-        image -> instance of class AstroImage with its attributes as follows:
-            rawimage -> [2d array of float] raw grayscale image
-            res -> [array of float] Camera resolution
-        """    
-        image_raw = read_image(imagefile)
+            image -> instance of class AstroImage with its attributes as follows:
+                rawimage -> [2d array of float] raw grayscale image
+                res -> [array of float] Camera resolution
+        """ 
+        if type(image_in) is str:    
+            image_raw = read_image(image_in)
+        else:
+            image_raw = image_in
+                    
         res = image_raw.shape
         info = {'image_raw':image_raw,'res':res}
 

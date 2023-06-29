@@ -7,30 +7,35 @@ from PIL import Image
 
 def read_image(imagefile):
     """
-    Read an astronomical image captured by cameras in fits format or in generic image format.
+    Read an astronomical image file. 
+    Currently, supported image formats include fits, generic image format(such as bmp), and npy.
 
     Usage:
-        >>> imagefile = 'obs/fits/img_00000.fits' # imagefile = 'obs/bmp/img_00000.bmp'
+        >>> imagefile = 'obs/fits/img_00000.fits' 
+        >>> # imagefile = 'obs/bmp/img_00000.bmp'
+        >>> # imagefile = 'obs/npy/img_00000.npy'
         >>> image_raw = read_image(imagefile)
 
     Inputs:
-        imagefile -> [str] image filename
-
+        imagefile -> [str] path of image file
     Outputs:
         image_raw -> [2d array of float] raw grayscale image with origin at bottom left corner point
     """
     if imagefile.split('.')[1] in ['fits','fit']: # Load an astronomical image in format of fits
         unit_list = fits.open(imagefile)
         image_raw = unit_list[0].data.astype(float) 
+        # convert origin from top left to bottom left
+        image_raw = image_raw[::-1] 
+    elif imagefile.split('.')[1] == 'npy':    
+        image_raw = np.load(imagefile)
     else:
         image_raw = Image.open(imagefile).convert('L') # Load an astronomical image in generic image format
         image_raw = np.asarray(image_raw)
-    # convert origin from top left to bottom left
-    image_raw = image_raw[::-1] 
+        # convert origin from top left to bottom left
+        image_raw = image_raw[::-1] 
 
-    return image_raw
+    return image_raw  
     
-
 def source_extract(image_raw,max_control_points=60,fwhm=12,mask=False):
     """
     Search for star spots in an image, extracting their centroids and doing photometry.
