@@ -1,3 +1,4 @@
+import numpy as np
 from photutils.aperture import CircularAperture,aperture_photometry
 from scipy.spatial import KDTree
 
@@ -91,7 +92,9 @@ class AstroImage(object):
         noise = noise_table['aperture_sum'].value
         snr = brightness/noise # Signal Noise Ratio
 
-        dict_values = xy,offset,image_raw,_image,_apertures,brightness,snr,_mask_rectangle
+        di = np.argsort(brightness)[::-1] # descending index
+        dict_values = xy[di],offset,image_raw,_image,_apertures[di],brightness[di],snr[di],_mask_rectangle
+
         dict_keys = 'xy','offset','image_raw','_image','_apertures','brightness','snr','_mask_rectangle'
         info = dict(zip(dict_keys, dict_values))
 
