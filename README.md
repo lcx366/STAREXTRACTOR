@@ -30,7 +30,7 @@ Images can be in `.fits` format or in generic image format, such as `.bmp`.
 >>> #imagefile = 'obs/bmp/img_00000.bmp'
 >>> #imagefile = 'obs/npy/img_00000.npy'
 >>> image = AstroImage.read_image(imagefile)
->>> image = AstroImage.read_image(image_array)
+>>> #image = AstroImage.read_image(image_array)
 ```
 
 Print the raw grayscale image with the origin at the center of the bottom(the first row of array) left pixel.
@@ -80,9 +80,11 @@ Estimate the centroids coordinates, brightness(sum of gray value within an apert
 ## Change log
 
 - **0.1.6 — Jun 29,  2023**
+  
   - Added support for image file formats `.npy` and `numpy array` in function *AstroImage.read_image()*
 
 - **0.1.5 — May 14,  2023**
+  
   - The class `Centriod` is *deprecated*, and the class `Source` is used instead
   - Add method `.invariantfeatures()` to class `Source`, which calculates the triangle invariants and constructs a 2D Tree; and records the asterism indices for each triangle.
 
