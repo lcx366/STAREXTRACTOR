@@ -34,7 +34,6 @@ class AstroImage(object):
             >>> # imagefile = 'obs/npy/img_00000.npy'
             >>> image = AstroImage.read_image(imagefile)
             >>> # image = AstroImage.read_image(image_array)
-
         Inputs:
             image_in -> [str or numpy array] image file or numpy array
 

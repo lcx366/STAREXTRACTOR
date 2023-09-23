@@ -22,9 +22,7 @@ pip install starextractor --upgrade # to upgrade a pre-existing installation
 
 ### Read an astronomical image
 
-
-
-Currently, supported image formats include `.fits`, generic image format(such as `.bmp`), and `.npy`.
+Currently, supported image formats include `.fits`, generic image format(such as `.bmp`), `.npy`, and numpy array.
 
 ```python
 >>> from starextractor import AstroImage
@@ -32,6 +30,7 @@ Currently, supported image formats include `.fits`, generic image format(such as
 >>> #imagefile = 'obs/bmp/img_00000.bmp'
 >>> #imagefile = 'obs/npy/img_00000.npy'
 >>> image = AstroImage.read_image(imagefile)
+>>> # image = AstroImage.read_image(image_array)
 ```
 
 Print the raw grayscale image with the origin at the center of the bottom(the first row of array) left pixel.

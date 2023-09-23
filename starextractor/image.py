@@ -15,7 +15,6 @@ def read_image(imagefile):
         >>> # imagefile = 'obs/bmp/img_00000.bmp'
         >>> # imagefile = 'obs/npy/img_00000.npy'
         >>> image_raw = read_image(imagefile)
-
     Inputs:
         imagefile -> [str] path of image file
     Outputs:
