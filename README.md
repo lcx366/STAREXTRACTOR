@@ -96,6 +96,10 @@ Estimate the centroids coordinates, brightness(sum of gray value within an apert
   
   - The ***starextractor*** package was released.
 
+## Next Release
+
+- Implementation of automatically obtaining the value of FWHM based on the image in `image.find_source`.
+
 ## Reference
 
 - [photutils](https://photutils.readthedocs.io/en/stable/index.html)
