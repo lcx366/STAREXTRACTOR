@@ -8,7 +8,7 @@ from PIL import Image
 def read_image(imagefile):
     """
     Read an astronomical image file. 
-    Currently, supported image formats include fits, generic image format(such as bmp), and npy.
+    Currently, supported image formats include .fits, generic image format(such as .bmp), and .npy.
 
     Usage:
         >>> imagefile = 'obs/fits/img_00000.fits' 
