@@ -9,26 +9,34 @@ from .invariantfeatures import _generate_invariants
 class AstroImage(object):
     """
     Class AstroImage
+        Attributes:
+            - image_raw -> [2d array of float] Raw grayscale image
+            - res -> Resolution 
+        Methods:
+            - show -> Show raw grayscale image.
+            - find_source -> Cataloging orbit determination using combined optical angle measurements and radar range+angle measurements with SGP4 propagator. 
     """    
-
     def __init__(self,info):  
-
+        """
+        Initialize an instance of class AstroImage.
+        """
         self.info = info
 
         for key in info.keys():
             setattr(self, key, info[key])
 
     def __repr__(self):
-    
-        return 'instance of class AstroImage'
+        """
+        Returns a more information-rich string representation of the AstroImage object.
+        """
+        return '<AstroImage object: RES = {}>'.format(self.res) 
 
     def read_image(image_in):
         """
-        Read an astronomical image captured by cameras. 
-        Currently, supported image formats include .fits, generic image format(such as .bmp), .npy, or numpy array.
+        Read astronomical images. Currently, image formats with .fits, generic image format(such as .bmp), .npy, and numpy array are supported.
 
         Usage:
-            >>> from sourceextractor import AstroImage
+            >>> from starextractor import AstroImage
             >>> imagefile = 'obs/fits/img_00000.fits'
             >>> # imagefile = 'obs/bmp/img_00000.bmp'
             >>> # imagefile = 'obs/npy/img_00000.npy'
@@ -36,11 +44,10 @@ class AstroImage(object):
             >>> # image = AstroImage.read_image(image_array)
         Inputs:
             image_in -> [str or numpy array] image file or numpy array
-
         Outputs:
-            image -> instance of class AstroImage with its attributes as follows:
-                rawimage -> [2d array of float] raw grayscale image
-                res -> [array of float] Camera resolution
+            image -> Object of class AstroImage with attributes as follows:
+                image_raw -> [2d array of float] Raw grayscale image
+                res -> [array of float] Resolution
         """ 
         if type(image_in) is str:    
             image_raw = read_image(image_in)
@@ -57,25 +64,25 @@ class AstroImage(object):
         Search for star spots in an image, extracting their centroids and doing photometry.
 
         Usage: 
-        >>> from sourceextractor import AstroImage
-        >>> imagefile = 'obs/fits/img_00000.fits' # imagefile = 'obs/bmp/img_00000.bmp'
-        >>> image = AstroImage.read_image(imagefile)
-        >>> sources = image.find_source(imagefile,mask=True)
-
-        Parameters:    
-        max_control_points -> [int,optional,default=50] Maximum number of sources to extract
-        fwhm -> [float,optional,default=15] Priori Full-width half-maximum (FWHM) of the Gaussian kernel in units of pixels used in DAOStarFinder
-        mask -> [bool,optional,default=False] A True value indicates the edge area of an image is masked. Masked pixels are ignored when searching for stars.
+            >>> from starextractor import AstroImage
+            >>> imagefile = 'obs/fits/img_00000.fits' 
+            >>> # imagefile = 'obs/bmp/img_00000.bmp'
+            >>> image = AstroImage.read_image(imagefile)
+            >>> sources = image.find_source(imagefile,mask=True)
+        Inputs:    
+            max_control_points -> [int,optional,default=60] Maximum number of sources to extract
+            fwhm -> [float,optional,default=12] Priori Full-width half-maximum (FWHM) of the Gaussian kernel in units of pixels used in DAOStarFinder.
+            mask -> [bool,optional,default=False] A True value indicates the edge area of an image is masked. Masked pixels are ignored when searching for stars.
         Outputs:
-        sources -> Instance of class Source with its attributes as follows:
-            xy_centroids -> [2d array of float] Pixel coordinates of the star centroids
-            offset -> [array of float] Pixel coordinates of the center of the image
-            _image_raw -> [2d array of float] raw grayscale image
-            _image -> [2d array of float] signal, i.e. subtracting the background gray value from the raw grayscale image
-            _apertures -> A circular aperture defined in pixel coordinates.
-            brightness -> [array of float]  Brightness(Grayvalues) of star spots
-            snr -> [array of float] Signal Noise Ratio(SNR) of star spots
-            mask_rectangle -> [None or tuple] If None, then no mask rectangle is generated; Else, a rectangle defined by the bottom left corner point, width and height is generated
+            sources -> Object of class Source with attributes as follows:
+                xy -> [2d array of float] Pixel coordinates of the star centroids
+                offset -> [array of float] Pixel coordinates of the center of the image
+                _image_raw -> [2d array of float] Raw grayscale image
+                _image -> [2d array of float] Grayscale image of sources, i.e., subtracting the background gray value from the raw grayscale image
+                _apertures -> A circular aperture defined in pixel coordinates.
+                brightness -> [array of float]  Brightness(Grayvalues) of star spots
+                snr -> [array of float] Signal Noise Ratio(SNR) of star spots
+                mask_rectangle -> [None or tuple] If None, then no mask rectangle is generated; Else, a rectangle defined by the bottom left corner point, width and height is generated
         """
         image_raw = self.image_raw
         # Search for star spots in an image and extract them
@@ -101,11 +108,12 @@ class AstroImage(object):
 
     def show(self,fig_out=None):
         """
-        Show raw image
+        Show grayscale image.
 
-        Parameters:
-        fig_out -> [str,optional,default=None] In not None, save the output image to a file defined by fig_out
-
+        Usage:
+            >>> image.show()
+        Inputs:
+            fig_out -> [str,optional,default=None] Path of the output image.
         """
         if fig_out is None:
             show_image(self.image_raw,origin='lower') 
@@ -118,23 +126,29 @@ class Source(object):
     Class Source
     """
     
-    def __init__(self,info):  
-
+    def __init__(self,info): 
+        """
+        Initialize an instance of class Source.
+        """ 
         self.info = info
 
         for key in info.keys():
             setattr(self, key, info[key])
 
     def __repr__(self):
-    
-        return 'Instance of class Source'
+        """
+        Returns a more information-rich string representation of the Source object.
+        """
+        return '<Source object: NUM = {:d} OFFSET = {}>'.format(len(self.xy),self.offset)
 
     def show(self,fig_out=None):
         """
-        Show raw image with stars marked
+        Show raw image with sources marked.
 
+        Usage:
+            >>> sources.show()
         Inputs:
-            fig_out -> [str,optional,default=None] In not None, save the image to a file defined by fig_out
+            fig_out -> [str,optional,default=None] Path of the output image.
         """
         if fig_out is None:
             plot_kwargs = {'mark':(self._apertures,'blue')}
@@ -155,6 +169,3 @@ class Source(object):
         self.info.update({'invariants':inv_uniq,'asterisms':triang_vrtx_uniq,'kdtree':inv_uniq_tree})
         self.invariants,self.asterisms,self.kdtree = inv_uniq,triang_vrtx_uniq,inv_uniq_tree
         return self
-
- 
-        
