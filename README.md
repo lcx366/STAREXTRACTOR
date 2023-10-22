@@ -79,6 +79,10 @@ Estimate the centroids coordinates, brightness(sum of gray value within an apert
 
 ## Change log
 
+- **0.1.8 — Oct 22, 2023**
+  
+  - Added an information-rich string representation of the object and fixed some annotation typos.
+
 - **0.1.7 — Sep 23, 2023**
   
   - Fixed a warning caused by determining whether an array is empty in Python of version > 3.9.
