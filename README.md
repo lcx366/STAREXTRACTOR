@@ -5,20 +5,20 @@
 This package is an archive of scientific routines for astronomical image processing related to the source extraction and photometry.
 Currently, operations on source extraction include:
 
-1. Read and parse an astronomical image in follwing formats: `.fits`, generic image format like `.bmp`,  NumPy-specific binary files like `.npy` and 2D array;
-2. Estimate the Full width at half maximum (FWHM) of the gaussian kernel for the image.
-3. Extract the centroid coordinates of the star spots using the DAOFIND algorithm  implementation from [`photutils`]([Photutils &#8212; photutils 1.9.0](https://photutils.readthedocs.io/en/stable/index.html#));
-4. Visualize the grayscale image of original/background/background-subtracted/background noise levels;
+1. Read and parse an astronomical image in follwing formats: `.fits`, generic image format like `.bmp`,  NumPy-specific binary files like `.npy` and 2D numpy array;
+2. Estimate the Full width at half maximum (FWHM) of the gaussian kernel for the image；
+3. Extract the centroid coordinates of the star spots using the DAOFIND algorithm  implementation from [`photutils`](https://photutils.readthedocs.io/en/stable/index.html);
+4. Visualize the grayscale image of the original image, sky background, background-subtracted image, background noise levels.
 
 Operations on photometry include:
 
-1. **Aperture Photometry**. It is widely used in general star field photometry, but less suitble for crowded star fields with light spots overlapped and when stars are located on the image boundaries.
+1. **Aperture Photometry**. It is widely used in general star field photometry, but less suitble for crowded star fields with light spots overlapped and when stars are located near the image boundaries.
 
 2. **Point Spread Function(PSF)/Pixel Response Function(PRF) Photometry**. It solved the problem encountered by the aperture photometry, and can estimate the brightness of stars more accurately.
 
 3. **DAOPHOT Photometry**. It is essentially iterative PSF photometry, useful for crowded fields where faint stars are very close to bright stars. The faint stars may not be detected until after the bright stars are subtracted, so it can find more faint stars by a number of iterations.
 
-4. Show original image with star spots marked;
+4. Show original image with star spots marked.
 
 ## How to Install
 
@@ -31,7 +31,7 @@ pip install starextractor --upgrade # to upgrade a pre-existing installation
 
 ## How to use
 
-### Read an astronomical image
+### Read and parse an astronomical image
 
 Currently, supported image formats include `.fits`, generic image format(such as `.bmp`), NumPy-specific binary files like`.npy`, and 2D numpy array.
 
@@ -106,6 +106,8 @@ Use the previously estimated centroid coordinates by DAOFIND algorithm as the pr
 >>> sources = data.find_source(phot='psf',edgemask=True)
 >>> print(sources)
 >>> # <Source object: NUM = 25 OFFSET = [511.5 511.5] EDGEMASK = True PHOT = 'PSF'>
+>>> # The brightness is computed as the sum of gray value within an square gaussian kernel.
+>>> print(sources.xy,sources.brightness,sources.snr)
 ```
 
 Use the previously estimated centroid coordinates by DAOFIND algorithm as the prior value, fit the centroid coordinates and do photometry with the DAOPHOT Photometry method.
@@ -115,6 +117,7 @@ Use the previously estimated centroid coordinates by DAOFIND algorithm as the pr
 >>> print(sources)
 >>> # <Source object: NUM = 26 OFFSET = [511.5 511.5] EDGEMASK = True PHOT = 'DAO'>
 ```
+Compared with Aperture Photometry and PSF Photometry, DAOPHOT Photometry finds one more source.
 
 ### Show the extracted sources in image
 
