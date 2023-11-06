@@ -1,1 +1,1 @@
-from .classes import AstroImage
+from .classes import parse_image

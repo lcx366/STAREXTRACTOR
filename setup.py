@@ -2,15 +2,15 @@ from setuptools import setup,find_packages
 
 setup(
     name='starextractor',
-    version='0.1.8',
-    description='A package to extract stars from an astronomical image',
+    version='0.2.0',
+    description='A package for extracting stars and doing photometry from an astronomical image',
     author='Chunxiao Li',
     author_email='lcx366@126.com',
     url='https://github.com/lcx366/STAREXTRACTOR',
     license='MIT',
     long_description_content_type='text/markdown',
     long_description=open('README.md', 'rb').read().decode('utf-8'),
-    keywords = ['source extract','stars'],
+    keywords = ['source extraction','photometry','psf','daofind','fwhm'],
     python_requires = '>=3.10',
     classifiers=[
         'Development Status :: 4 - Beta',
