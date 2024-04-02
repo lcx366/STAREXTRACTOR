@@ -50,7 +50,6 @@ Estimate the Full width at half maximum (FWHM) of the gaussian kernel for the im
 ```python
 >>> print(data.fwhm) # in pixels
 >>> # 9.439381701950126
->>> print(data.sigma) # Sigma of the gaussian kernel
 ```
 
 The relationship between the sigma and FWHM is expressed as
